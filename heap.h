@@ -14,8 +14,19 @@ struct MinHeap {
 
     MinHeap() { size = 0; }
 
+
+    // Insert a node index to heap, placing it at the end of data array and then restore the minheap order by calling upheap on the insert position
+    // weightArr[] is used for comparisons and ties are broken by the smaller index
+    // If size is full insert is ignored and prints message
+
     void push(int idx, int weightArr[]) {
-        // TODO: insert index at end of heap, restore order using upheap()
+        if (size >= 64) {
+            cout << "Heap is full. Cannot insert new element." << endl;
+            return;
+        }
+        data[size] = idx;
+        upheap(size, weightArr);
+        size++;
     }
 
     int pop(int weightArr[]) {
