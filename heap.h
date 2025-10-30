@@ -23,9 +23,26 @@ struct MinHeap {
         // Replace root with last element, then call downheap()
         return -1; // placeholder
     }
+    // Restores the minheap property after inserting a new element
 
     void upheap(int pos, int weightArr[]) {
-        // TODO: swap child upward while smaller than parent
+        while (pos > 0) {
+            int parent = (pos - 1) / 2;
+            int a = data[pos];
+            int b = data[parent];
+
+            bool smallerByWeight = (weightArr[a] < weightArr[b]);
+            bool tieAndSmallerIdx = (weightArr[a] == weightArr[b] && a < b);
+
+            if (smallerByWeight || tieAndSmallerIdx) {
+                int temp = data[pos];
+                data[pos] = data[parent];
+                data[parent] = temp;
+                pos = parent;
+            } else {
+                break;
+            }
+        }
     }
 
     void downheap(int pos, int weightArr[]) {
