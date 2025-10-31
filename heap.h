@@ -60,6 +60,10 @@ struct MinHeap {
         }
     }
 
+    //  Restore the minheap property after removing the root and replacing it with the last element.
+    //  Starting at the root, we choose the smaller child by the weight, if tie we use smaller index.
+    //  We keep swapping with the child until the child nodes are no longer small or the node has no children.
+
     void downheap(int pos, int weightArr[]) {
         while (true) {
             int left = 2 * pos + 1;
