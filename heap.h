@@ -15,9 +15,9 @@ struct MinHeap {
     MinHeap() { size = 0; }
 
 
-    // Insert a node index to heap, placing it at the end of data array and then restore the minheap order by calling upheap on the insert position
-    // weightArr[] is used for comparisons and ties are broken by the smaller index
-    // If size is full insert is ignored and prints message
+    //  Insert a node index to heap, placing it at the end of data array and then restore the minheap order by calling upheap on the insert position
+    //  weightArr[] is used for comparisons and ties are broken by the smaller index
+    //  If size is full insert is ignored and prints message
 
     void push(int idx, int weightArr[]) {
         if (size >= 64) {
@@ -29,12 +29,25 @@ struct MinHeap {
         size++;
     }
 
+    //
 
     int pop(int weightArr[]) {
-        // TODO: remove and return smallest index DAY 2
-        // Replace root with last element, then call downheap()
-        return -1; // placeholder
+        if (size == 0) {
+            cout << "Heap is empty. Cannot pop element." << endl;
+            return -1;
+        }
+
+        int p = data[0];
+        size--;
+
+        if (size > 0) {
+            data[0] = data[size];
+            downheap(0, weightArr);
+        }
+        return p;
     }
+
+
     // Restores the minheap property after inserting a new element
     // Starting from given position, function compares itself with its parent
     // If node weight is smaller or if weight is same but index is smaller position is swapped
