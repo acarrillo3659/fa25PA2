@@ -29,7 +29,10 @@ struct MinHeap {
         size++;
     }
 
-    //
+    //  Removes and returns the smallest index which is stored at the root of the heap
+    //  If heap is empty, a message is printed and -1 is returned.
+    //  Root is being saved and replaced by the last element.
+    //  Size will be decreased and to restore the minheap property downheap() is called.
 
     int pop(int weightArr[]) {
         if (size == 0) {
