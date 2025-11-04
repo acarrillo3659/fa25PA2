@@ -1,5 +1,5 @@
 //
-// Created by Manju Muralidharan on 10/19/25.
+//  Created by Manju Muralidharan on 10/19/25.
 //
 
 #ifndef HEAP_H
@@ -51,10 +51,10 @@ struct MinHeap {
     }
 
 
-    // Restores the minheap property after inserting a new element
-    // Starting from given position, function compares itself with its parent
-    // If node weight is smaller or if weight is same but index is smaller position is swapped
-    // Process continues until it reaches root node or if parent is smaller
+    //  Restores the minheap property after inserting a new element
+    //  Starting from given position, function compares itself with its parent
+    //  If node weight is smaller or if weight is same but index is smaller position is swapped
+    //  Process continues until it reaches root node or if parent is smaller
 
     void upheap(int pos, int weightArr[]) {
         while (pos > 0) {
