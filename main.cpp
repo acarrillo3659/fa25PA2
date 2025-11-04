@@ -71,7 +71,7 @@ void buildFrequencyTable(int freq[], const string& filename) {
     cout << "Frequency table built successfully.\n";
 }
 
-// Step 2: Create leaf nodes for each character
+//  Step 2: Create leaf nodes for each character
 int createLeafNodes(int freq[]) {
     int nextFree = 0;
     for (int i = 0; i < 26; ++i) {
@@ -87,9 +87,13 @@ int createLeafNodes(int freq[]) {
     return nextFree;
 }
 
-// Step 3: Build the encoding tree using heap operations
+//  Step 3: Build the encoding tree using heap operations
+//  This function builds the encoding tree by combining the two smallest weight nodes until only one root remains
+//  Leaf nodes are push first into the min heap.
+//  Each time it removes the two smallest nodes from the heap, then creates a parent node above them who has the weight of those two
+//  It then links the parent to the two child nodes created as left and right, which is then pushed into the index as new parent into the heap
+//  This repeats until there is only one node remains in the heap, which becomes the root of the tree
 int buildEncodingTree(int nextFree) {
-    // TODO:
     // 1. Create a MinHeap object.
     MinHeap heap;
 
@@ -102,9 +106,13 @@ int buildEncodingTree(int nextFree) {
     }
 
     // 3. While the heap size is greater than 1:
+    //    - Pop two smallest nodes
+    //    - Create a new parent node with combined weight
+    //    - Set left/right pointers
+    //    - Push new parent index back into the heap
+    // Move to the next free slot for the next parent node
     int curr = nextFree;
     while (heap.size > 1) {
-        //    - Pop two smallest nodes
         int left = heap.pop(weightArr);
         int right = heap.pop(weightArr);
 
@@ -112,18 +120,11 @@ int buildEncodingTree(int nextFree) {
             cerr << "Error: too many nodes\n";
             return -1;
         }
-
-        //    - Create a new parent node with combined weight
         weightArr[curr] = weightArr[left] + weightArr[right];
-
-        //    - Set left/right pointers
         leftArr[curr] = left;
         rightArr[curr] = right;
 
-        //    - Push new parent index back into the heap
         heap.push(curr, weightArr);
-
-        // Move to the next free slot for the next parent node
         curr++;
     }
 
