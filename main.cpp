@@ -1,5 +1,5 @@
 //
-// Created by Manju Muralidharan on 10/19/25.
+//  Created by Manju Muralidharan on 10/19/25.
 //
 #include <iostream>
 #include <fstream>
@@ -8,14 +8,14 @@
 #include "heap.h"
 using namespace std;
 
-// Global arrays for node information
+//  Global arrays for node information
 const int MAX_NODES = 64;
 int weightArr[MAX_NODES];
 int leftArr[MAX_NODES];
 int rightArr[MAX_NODES];
 char charArr[MAX_NODES];
 
-// Function prototypes
+//  Function prototypes
 void buildFrequencyTable(int freq[], const string& filename);
 int createLeafNodes(int freq[]);
 int buildEncodingTree(int nextFree);
@@ -25,20 +25,20 @@ void encodeMessage(const string& filename, string codes[]);
 int main() {
     int freq[26] = {0};
 
-    // Step 1: Read file and count letter frequencies
+    //  Step 1: Read file and count letter frequencies
     buildFrequencyTable(freq, "input.txt");
 
-    // Step 2: Create leaf nodes for each character with nonzero frequency
+    //  Step 2: Create leaf nodes for each character with nonzero frequency
     int nextFree = createLeafNodes(freq);
 
-    // Step 3: Build encoding tree using your heap
+    //  Step 3: Build encoding tree using your heap
     int root = buildEncodingTree(nextFree);
 
-    // Step 4: Generate binary codes using an STL stack
+    //  Step 4: Generate binary codes using an STL stack
     string codes[26];
     generateCodes(root, codes);
 
-    // Step 5: Encode the message and print output
+    //  Step 5: Encode the message and print output
     encodeMessage("input.txt", codes);
 
     return 0;
@@ -48,7 +48,7 @@ int main() {
     Function Definitions (Students will complete logic)
   ------------------------------------------------------*/
 
-// Step 1: Read file and count frequencies
+//  Step 1: Read file and count frequencies
 void buildFrequencyTable(int freq[], const string& filename) {
     ifstream file(filename);
     if (!file.is_open()) {
@@ -94,10 +94,10 @@ int createLeafNodes(int freq[]) {
 //  It then links the parent to the two child nodes created as left and right, which is then pushed into the index as new parent into the heap
 //  This repeats until there is only one node remains in the heap, which becomes the root of the tree
 int buildEncodingTree(int nextFree) {
-    // 1. Create a MinHeap object.
+    //  1. Create a MinHeap object.
     MinHeap heap;
 
-    // 2. Push all leaf node indices into the heap.
+    //  2. Push all leaf node indices into the heap.
     for (int i = 0; i < nextFree; ++i) {
         heap.push(i, weightArr);
     }
@@ -105,12 +105,12 @@ int buildEncodingTree(int nextFree) {
         return -1;
     }
 
-    // 3. While the heap size is greater than 1:
+    //  3. While the heap size is greater than 1:
     //    - Pop two smallest nodes
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
     //    - Push new parent index back into the heap
-    // Move to the next free slot for the next parent node
+    //  Move to the next free slot for the next parent node
     int curr = nextFree;
     while (heap.size > 1) {
         int left = heap.pop(weightArr);
@@ -129,31 +129,35 @@ int buildEncodingTree(int nextFree) {
     }
 
 
-    // 4. Return the index of the last remaining node (root)
+    //  4. Return the index of the last remaining node (root)
     int root = heap.pop(weightArr);
     return root;
 }
 
-// Step 4: Use an STL stack to generate codes
+//  Step 4: Use an STL stack to generate codes
+//  This function does a depth first search.
+//  stack<int> holds the node it wants to visit and
+//  Each time we pop the path is extended from the node to its children
+//  When we reach a leaf mode the final code path is stored in codes[]
 void generateCodes(int root, string codes[]) {
-if (root == -1) return;
+    if (root == -1) return;
 
-    // Local array for each node’s path string (potential debug point later).
+    //  Local array for each node’s path string (potential debug point later).
     string path[MAX_NODES];
 
-    // Stack for node indices to simulate DFS traversal.
+    //  Stack for node indices to simulate DFS traversal.
     stack<int> stk;
     stk.push(root);
     path[root] = "";
 
-    // Process nodes until all have been visited.
+    //  Process nodes until all have been visited.
     while (!stk.empty()) {
         int node = stk.top();
         stk.pop();
 
         bool isLeaf = (leftArr[node] == -1 && rightArr[node] == -1);
 
-        // Record code when a leaf node is reached.
+        //  Record code when a leaf node is reached.
         if (isLeaf) {
             if (charArr[node] >= 'a' && charArr[node] <= 'z') {
                 if (path[node].empty()) {
@@ -161,15 +165,24 @@ if (root == -1) return;
                 } else {
                     codes[charArr[node] - 'a'] = path[node];
                 }
+
+                //  Trim leading zeros until only one zero or a 1 is reached
+                string &code = codes[charArr[node] - 'a'];
+                int pos = code.find('1');
+                if (pos != string::npos) {
+                    code = code.substr(pos);
+                } else if (!code.empty()) {
+                    code = "0";
+                }
             }
         } else {
-            // Push right child and extend the path with '1'.
+            //  Push right child and extend the path with '1'.
             if (rightArr[node] != -1) {
                 stk.push(rightArr[node]);
                 path[rightArr[node]] = path[node] + "1";
             }
 
-            // Push left child and extend the path with '0'.
+            //  Push left child and extend the path with '0'.
             if (leftArr[node] != -1) {
                 stk.push(leftArr[node]);
                 path[leftArr[node]] = path[node] + "0";
@@ -178,7 +191,7 @@ if (root == -1) return;
     }
 }
 
-// Step 5: Print table and encoded message
+//  Step 5: Print table and encoded message
 void encodeMessage(const string& filename, string codes[]) {
     cout << "\nCharacter : Code\n";
     for (int i = 0; i < 26; ++i) {
